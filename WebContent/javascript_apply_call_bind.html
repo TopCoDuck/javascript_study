@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script>
+var object1 = {
+		
+		object_val : "object_val",
+		
+		fn : function(){
+			
+			function b(prefix,postfix){
+				console.log(prefix + this.object_val+postfix);
+			}
+			
+			b("직접호출하는 경우 : "," 나오게 됩니다."); 
+			b.call(this,"call 또는 apply를 사용하는 경우 : "," 본래의 값이 나오게 됩니다.");
+			b.apply(this,["call 또는 apply를 사용하는 경우 : "," 본래의 값이 나오게 됩니다."]);
+		}	
+}
+
+
+object1.fn();
+
+//명시적으로 this를 정의(함수컨텍스트를 지정하는 함수)
+function filter (list,filtering){
+	var result = [];
+	for(var n = 0; n<list.length; n++){
+		if(filtering.call(list[n])){
+		  result.push(list[n]);	
+		}
+	}
+	return result;
+}
+
+var object_list  = [
+	{name:'사람',type:'동물'},
+	{name:'사과',type:'과일'},
+	{name:'바나나',type:'과일'}
+];
+
+var coustom_filter  = function (){
+	return this.type === '과일';	
+};
+
+filter(object_list,
+		coustom_filter
+);
+
+//ES5에서 추가 됨
+// 이펙티브 자바스크립트 .js
+var buffer = {
+	entries :[],
+	add : function(s){
+		this.entries.push(s);
+	}
+}
+
+var source = ['1234','-','5678'];
+//source.forEach(buffer.add); //X
+//source.forEach(buffer.add,buffer); //forEach는 this를 바꾸는 것이 지원 됨
+//source.forEach(function(s) { buffer.add(s);})
+//source.forEach(buffer.add,bind(buffer));
+//xxx.bind(null,"http",siteDomain); // this가 필요 없을 경우
+//즉 call이나 apply와 비슷하지만 호출은 하지 않지 않고 함수만 반환하는 겁니다
+</script>
+
+</head>
+
+<body>
+
+</body>
+</html>

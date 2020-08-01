@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script>
+//http://webframeworks.kr/tutorials/translate/explanation-of-this-in-javascript-1/
+
+//함수 실행
+function direct_function(){
+	console.log("direct_function","this === window",this === window);
+};
+
+function direct_function_strict(){
+	  'use strict'; 
+	console.log("direct_function_strict","this === undefined",this === undefined);
+};
+
+direct_function();
+direct_function_strict();
+
+
+//메서드 실행
+var object1 = {
+	outer_function : function(){
+			console.log("object1 outer_function","this === object1",this === object1);
+		function inner_function(){
+			console.log("object1 inner_function","this === window",this === window);
+		}
+		inner_function();
+		//call.
+	}	
+};
+
+object1.outer_function();
+
+console.log("함수를  받아 사용하는 경우  함수로써 실행 되기 때문에  this는 window 가 된다.");
+var object1_function = object1.outer_function;
+object1_function();
+
+
+//생성자 실행
+function constract1(){
+	
+	console.log("constract1","this instanceof constract1",this instanceof constract1);
+	console.log("constract1","this === window",this === window);
+	
+}
+
+constract1.prototype._function = function(){
+	
+	
+}
+
+console.log("new를 사용");
+var implements1 = new constract1();
+
+console.log("new 미사용은, function 과 같이 작동함");
+var implements1 = constract1();
+
+
+</script>
+</head>
+
+<body>
+
+</body>
+</html>

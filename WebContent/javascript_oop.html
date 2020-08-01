@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script>
+
+//프로토타입과 상속
+//하나의 객체를 사용하며 변수를 공유함,
+//네임스페이스 부여외 용도 없음
+//https://huns.me/development/516
+//https://webclub.tistory.com/312
+var object1 = {
+		value : "test",
+		init : function() {
+			this.value ="init_value";
+			
+		},
+		object1_fun : function(){
+			console.log(this.value);
+			
+		},
+		object2_fun : function(){
+			this.object1_fun();
+		}
+}
+object1.init();
+object1.object1_fun();
+object1.object2_fun();
+
+
+//private 존재, 내용을 감출 수 있음
+//여러 객체로 사용하는 것은 불가능
+var iife = (function () {
+	
+	var value = "test";
+	
+	var fn = function fn(){
+		console.log(value);
+	}
+	var setValue = function setValue(val){
+		value = val;
+	}
+	return {
+		 fn
+		,setValue
+	};
+	
+})()
+
+iife.setValue("setValue");
+iife.fn();
+
+/**
+ * function bad_case(){
+	var value= {"test"};
+	
+	this.getVale  = function(){
+		return value;
+	}
+}  
+ var bad_instance = new bad_case();
+  hack_value = bad_instance.getValue();
+  
+  hack_value = {"hacked"};
+ */
+//https://poiemaweb.com/js-object-oriented-programming
+
+
+//객체 - constructor 프로퍼티 - prototype 프로퍼티 
+//객체에 없으면 prototype에서 찾는다.
+//Object는 객체의 최상위다.
+//상속시 직접 prototype에 할당 x 객체로 할당
+//동일하명이 있으며 property우선이 됨.
+function ParentObject(){
+	//if(!(this instanceof ParentObject)){
+	//	throw new Error("new 생성자를 통해 만드세요.")
+	//}
+	if(!(this instanceof ParentObject)){
+		return new ParentObject();
+	}
+ 	this.prototype.fn1 = function(){
+ 	}
+};
+
+function ChildObject(){}
+
+ChildObject.prototype = new ParentObject();
+
+ChildObject.prototype.fn2 = function(){
+	
+}
+
+var childObject = new ChildObject();
+//https://developer.mozilla.org/ko/docs/Learn/JavaScript/Objects/Object-oriented_JS
+//https://www.youtube.com/watch?v=sWOXYDBbz0g
+  
+</script>
+</head>
+<body>
+
+</body>
+</html>

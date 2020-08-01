@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script>
+//클로저는 보호막, 가비지 컬랙션에서 보호한다.
+//계속 참조하고 있는 곳이 있어서 값을 머금고 있는 현상
+//참조를 계속 하고 있음으로 넣아주지 않음으로서 해당 값들은 메모리에 유지 됨
+//더 밖에 위치한 변수가 붙자고 있으면, (전역부터 ~ )
+var global_perfer;
+function outer_function(){
+	var inner_val = "함수 내부값";
+	function inner_function(){
+		console.log(inner_val);	
+	}
+	global_perfer = inner_function();
+}
+
+outer_function();
+global_perfer();
+
+//private 변수 효과
+//콜백과 타이머 : 감싸고 있는 Function이 종료 되어도 값을 읽어 올 수 있게 함.
+function wrap_function(){
+	var wrap_val = "감싸고 있는 Function의 값";
+	setInterval(function(){
+		cosole.log(wrap_val);
+	},1000)
+}
+//bind() ~ 지연된 콜백 실행을 위해 익명함수와 클로저를 통해 콘텍스틀르 제어하는 것 / 예제 변경 필요
+var button = {
+	clicked :false,
+	click: function(){
+		this.clicked : false;
+		console.log(this.clicked);
+	}
+}
+
+var elem = document.getElementById("test");
+//elem.addEventListener("click",bind(button.click),false);
+
+//커링 - 미리 개산된 Function을 반환  /다른 책 참조 필요
+Function.prototype.partial = function(){
+	var fn = this, args = Array.prototoype.slice.call(arguments);
+	return function(){
+		var arg = 0;
+		for (var i = 0 , i < args.length && arg < arguments.length; i++){
+			if(args[i] === undefined){
+				args[i] = arguments[arg++];
+			}
+		}
+		return fn.apply(this,args);
+	}
+}
+
+//메모이제이션
+Function.prototype.memoized = function(key){
+	//이미 존재하면, 존재하지 않으면
+	this._values = this._values || {};
+	
+	return this._values[key] != undefined?
+			this._values[key] :	//호출함수르 실행 + 값 입력
+			this._values[key] = this.apply(this,arguments);
+			
+}
+
+Function.prototype.memoize = function(){
+	var fn = this;
+	return function(){
+		return fn.memoized.apply(fn, arguments);
+	}
+}
+
+var isPrime = (function(num){
+	var prime = num !=1;
+	for(var i = 2; i < num; i++){
+		if(num % i == 0){
+			prime = false;
+			break;
+		}
+	}
+	return prime;
+}).memoize(); //memoize 리턴함수 실행
+
+//동일한값 확인시 저장된 결과값 반환 및 _values값 생성 됨
+console.log(isPrime(17),isPrime._values[17]);
+
+//함수래핑 ~ 다른 화면책 참조 필요 139 쪽
+/**
+ * 함수의 로직은 외부로 드러내지 않으면서, 새로운 기능을 추가하거나 혹은 기능을 확장하는 기법이다.
+ 이 방법은 함수의 일부 기능은 그대로 사용하면서, 몇 가지 동작은 변경하고자 하는 경우에 사용하기 좋다.
+ 브라우저가 몇몇 기능을 제공하지 않는 상황에서 크로스 브라우저 코드를 구현해야 할 때 흔히 사용한다.
+ */
+
+//즉시실행함수
+// - 라이브러리 범위 제한
+// - 임시 유효범위와 private 변수
+// - 루프에 의 최종 값만 적용 방지
+
+</script>
+</head>
+<body>
+
+</body>
+</html>
